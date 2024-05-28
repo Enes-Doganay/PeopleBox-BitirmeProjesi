@@ -2,7 +2,7 @@
 include "views/_header.php";
 include "views/_navbar.php";
 require_once 'controllers/user-controller.php';
-include "config/functions.php";
+include "libs/functions.php";
 
 // CSRF token oluşturma ve kontrol etme
 if (empty($_SESSION['csrf_token'])) {
@@ -23,6 +23,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"]))
     $email = control_input($_POST["email"]);
     $password = control_input($_POST["password"]);
 
+    //e posta kontrolü
     if(empty($email)){
         $email_err = "E-posta adresi girmelisiniz.";
     }
@@ -30,6 +31,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"]))
         $email_err = "Geçerli bir e-posta kullanınız.";
     }
 
+    //şifre kontrolü
     if(empty($password)){
         $password_err = "Şifre girmelisiniz.";
     }
@@ -37,23 +39,19 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"]))
         $password = "Şifre en az 8 karakterden oluşmalıdır.";
     }
 
-    if(empty($email_err) && empty($password_err)){
+    //hata yoksa kullanıcı girişini sağla varsa hata mesajı göster
+    if (empty($email_err) && empty($password_err)) {
         $controller = new UserController();
-        $resultMessage = $controller->login($email,$password);
-
-        if(strpos($resultMessage,"başarısız") === true){
-            echo "<div class='alert alert-danger'>{$result_message}</div>";
+        $resultMessage = $controller->login($email, $password);
+    
+        if ($resultMessage !== true) {
+            echo "<div class='alert alert-danger'>{$resultMessage}</div>";
         }
-    }else{
-        echo "<div class='alert alert-danger'> Formu eksiksiz doldurun.</div>";
-    }
+    } else {
+        echo "<div class='alert alert-danger'>Formu eksiksiz doldurun.</div>";
+    }    
 }
-
-
-
 ?>
-
-
 
 <div class="container my-3">
     <div class="row">

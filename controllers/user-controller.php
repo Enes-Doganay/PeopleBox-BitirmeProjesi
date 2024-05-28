@@ -27,10 +27,12 @@ class UserController {
     }
 
     public function login($email, $password) {
-        if ($this->user->login($email, $password)) {
+        $result = $this->user->login($email, $password);
+
+        if ($result === true) {
             header('Location: index.php');
         } else {
-            return "Giriş başarısız!";
+            return $result;
         }
     }
 

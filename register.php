@@ -3,7 +3,7 @@
 include "views/_header.php";
 include "views/_navbar.php";
 require_once 'controllers/user-controller.php';
-include "config/functions.php";
+include "libs/functions.php";
 
 // CSRF token oluşturma ve kontrol etme
 if (empty($_SESSION['csrf_token'])) {
@@ -26,32 +26,38 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
     $password = control_input($_POST["password"]);
     $confirmPassword = control_input($_POST["confirmPassword"]);
 
+    //Ad kontrolü
     if (empty($firstName)) {
         $firstName_err = "Adınızı girmelisiniz";
     }
 
+    //Soyad kontrolü
     if (empty($lastName)) {
         $lastName_err = "Soyadınızı girmelisiniz";
     }
 
+    //Email kontrolü
     if (empty($email)) {
         $email_err = "E-posta adresinizi girmelisiniz";
     } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $email_err = "Geçerli bir e-posta adresi kullanınız.";
     }
 
+    //Şifre kontrolü
     if (empty($password)) {
         $password_err = "Şifre girmelisiniz";
     } else if (strlen($password) < 8) {
         $password_err = "Şifre en az 8 karakterden oluşturulmalıdır.";
     }
 
+    //Şifre tekrarı kontrolü
     if (empty($confirmPassword)) {
         $confirmPassword_err = "Şifre tekrarı girmelisiniz";
     } else if ($password !== $confirmPassword) {
         $confirmPassword_err = "Şifreler eşleşmiyor.";
     }
 
+    //Hata yoksa kayıt işlemini sağla varsa hata mesajı göster
     if (empty($firstName_err) && empty($lastName_err) && empty($email_err) && empty($password_err) && empty($confirmPassword_err)) {
         $controller = new UserController();
         $result_message = $controller->register($firstName, $lastName, $email, $password);

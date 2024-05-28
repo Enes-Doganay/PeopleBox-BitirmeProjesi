@@ -27,6 +27,8 @@ session_start();
                 </li>
                 <?php
 
+                //Kullanıcı girişi ve rolüne göre linklerin düzenlenmesi
+
                 $userController = new UserController();
 
                 if ($userController->isLogged()) {

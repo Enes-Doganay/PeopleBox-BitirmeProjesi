@@ -7,6 +7,7 @@ class user {
         $this->conn = $conn;
     }
 
+    //prepared statement kullanarak kayıt fonksiyonu
     public function register($firstName, $lastName, $email, $password, $role = 'user') {
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
         $stmt = $this->conn->prepare("INSERT INTO users (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?)");
@@ -21,6 +22,7 @@ class user {
         }
     }
 
+    //prepared statement kullanarak giriş fonksiyonu
     public function login($email, $password) {
         $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
@@ -28,13 +30,20 @@ class user {
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
 
-        if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['role'] = $user['role'];
-            return true;
+        //kullanıcı doğrulaması
+        if($user){
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['role'] = $user['role'];
+                return true;
+            }else{
+                return "Şifre yanlış!";
+            }
         }
-        return false;
+        else{
+            return "E-posta bulunamadı!";
+        }        
     }
 
     public function logout() {
@@ -50,6 +59,7 @@ class user {
         return isset($_SESSION['user_id']);
     }
 
+    //email sisteme kayıtlı mı 
     public function isEmailExists($email) {
         $query = "SELECT * FROM users WHERE email = ?";
         $stmt = $this->conn->prepare($query);

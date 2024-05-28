@@ -1,6 +1,11 @@
+<?php 
+require_once 'controllers/user-controller.php'; 
+session_start();
+?>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="#">Book Store</a>
+        <a class="navbar-brand" href="index.php">Book Store</a>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -20,12 +25,20 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">Favori Listem</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Giriş Yap</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Kayıt Ol</a>
-                </li>
+                <?php
+
+                $userController = new UserController();
+
+                if ($userController->isLogged()) {
+                    if ($userController->isAdmin()) {
+                        echo '<li class="nav-item"><a class="nav-link" href="#">Admin Panel</a></li>';
+                    }
+                    echo '<li class="nav-item"><a class="nav-link" href="logout.php">Çıkış Yap</a></li>';
+                } else {
+                    echo '<li class="nav-item"><a class="nav-link" href="login.php">Giriş Yap</a></li>';
+                    echo '<li class="nav-item"><a class="nav-link" href="register.php">Kayıt Ol</a></li>';
+                }
+                ?>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Sepetim
                     <i class="fa-solid fa-cart-shopping"></i>

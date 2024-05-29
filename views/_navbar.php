@@ -33,7 +33,7 @@ session_start();
 
                 if ($userController->isLogged()) {
                     if ($userController->isAdmin()) {
-                        echo '<li class="nav-item"><a class="nav-link" href="#">Admin Panel</a></li>';
+                        echo '<li class="nav-item"><a class="nav-link" href="admin-panel.php">Admin Panel</a></li>';
                     }
                     echo '<li class="nav-item"><a class="nav-link" href="logout.php">Çıkış Yap</a></li>';
                 } else {

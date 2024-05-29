@@ -46,8 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["update"])) {
                 <!-- Kategori Adı -->
                 <div class="mb-3">
                     <label for="categoryName" class="form-label">Kategori Adı</label>
-                    <input type="text" class="form-control <?php echo !empty($categoryName_err) ? 'is-invalid' : ''; ?>" id="categoryName" name="categoryName" value="<?php 
-                    echo htmlspecialchars($category["name"]); ?>">
+                    <input type="text" class="form-control <?php echo !empty($categoryName_err) ? 'is-invalid' : ''; ?>" id="categoryName" name="categoryName" value="<?php echo empty($categoryName) ?
+                    htmlspecialchars($category["name"]) : $categoryName ?>">
                     <div class="invalid-feedback"><?php echo $categoryName_err; ?></div>
                 </div>
                   <!-- Bağlı Olduğu Kategori -->

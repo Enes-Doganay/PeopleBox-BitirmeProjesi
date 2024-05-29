@@ -9,6 +9,7 @@ $authorName_err = "";
 
 $authorController = new AuthorController();
 
+//Yazar ekleme işlemleri
 if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["create"])){
     $authorName = control_input($_POST["authorName"]);
 

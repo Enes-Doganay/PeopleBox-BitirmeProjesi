@@ -14,7 +14,7 @@ $author = $authorController->getById($id);
 $authorName = "";
 $authorName_err = "";
 
-//Kategori güncelleme işlemleri
+//Yazar güncelleme işlemleri
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["update"])) {
     $authorName = control_input($_POST["authorName"]);
 

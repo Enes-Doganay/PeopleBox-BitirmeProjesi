@@ -13,31 +13,31 @@ class PublisherController
         $db = $database->getConnection();
         $this->publisher = new Publisher($db);
     }
-    //Yeni yayıncı oluşturma işlemi
+    //Yeni yayınevi oluşturma işlemi
     public function create($name)
     {
         $result = $this->publisher->create($name);
 
         if ($result === true) {
-            return "Yazar oluşturma başarılı";
+            return "Yayınevi oluşturma başarılı";
         } else {
-            return "Yazar oluşturma başarısız";
+            return "Yayınevi oluşturma başarısız";
         }
     }
 
-    //Tüm yayıncıları çekme işlemi
+    //Tüm yayınevlerini çekme işlemi
     public function getAll()
     {
         return $this->publisher->getAll();
     }
 
-    //Tüm belirli bir id'ye göre yayıncı çekme işlemi
+    //Tüm belirli bir id'ye göre yayınevlerini çekme işlemi
     public function getById($id)
     {
         return $this->publisher->getById($id);
     }
 
-    // Yayıncı güncelleme işlemi
+    // Yayınevi güncelleme işlemi
     public function update($id, $name)
     {
         $result = $this->publisher->update($id, $name);
@@ -49,7 +49,7 @@ class PublisherController
         }
     }
 
-    // Yayıncı silme işlemi
+    // Yayınevi silme işlemi
     public function delete($id)
     {
         $result = $this->publisher->delete($id);

@@ -48,6 +48,12 @@ class BookController
         return $this->book->getById($categoryId);
     }
 
+    // Anasayfada görüntülenecek aktif kitapları çekme işlemi
+    public function getHomeBooks()
+    {
+        return $this->book->getHomeBooks();
+    }
+
     // Kitap güncelleme işlemi
     public function update($id, $name, $description, $isbn, $image = null, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0)
     {

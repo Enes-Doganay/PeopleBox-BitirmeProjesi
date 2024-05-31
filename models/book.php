@@ -48,6 +48,14 @@ class Book
         return $stmt->get_result()->fetch_assoc();
     }
 
+    // Anasayfada görüntülenecek aktif kitapları çekme işlemi
+    public function getHomeBooks()
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM books WHERE is_active = 1 AND is_home = 1");
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
     // Kategori güncelleme işlemi
     public function update($id, $name, $description, $isbn, $image = null, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0)
     {

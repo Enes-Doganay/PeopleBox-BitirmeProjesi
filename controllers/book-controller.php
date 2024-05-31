@@ -45,7 +45,7 @@ class BookController
     // Belirli bir kategori idye göre çekme işlemi
     public function getByCategoryId($categoryId)
     {
-        return $this->book->getById($categoryId);
+        return $this->book->getByCategoryId($categoryId);
     }
 
     // Anasayfada görüntülenecek aktif kitapları çekme işlemi

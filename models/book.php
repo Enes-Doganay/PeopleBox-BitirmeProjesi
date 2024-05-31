@@ -42,10 +42,10 @@ class Book
     // Belirli bir kategori idye göre çekme işlemi
     public function getByCategoryId($categoryId)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM categories WHERE category_id = ?");
+        $stmt = $this->conn->prepare("SELECT * FROM books WHERE category_id = ?");
         $stmt->bind_param("i", $categoryId);
         $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+        return $stmt->get_result();
     }
 
     // Anasayfada görüntülenecek aktif kitapları çekme işlemi

@@ -1,5 +1,5 @@
 <div class="row">
-    <?php while ($item = $books->fetch_assoc()) : ?>
+    <?php while (!empty($books) && $item = $books->fetch_assoc()) : ?>
         <div class="col-md-3 mb-4">
             <a href="book-detail.php?id=<?php echo $item['id']; ?>" class="text-decoration-none text-dark">
                 <div class="card h-100">

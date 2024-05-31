@@ -56,6 +56,56 @@ class Book
         return $stmt->get_result();
     }
 
+    //Aranan kitapları görüntülemek için kitapları çekme işlemi
+    public function getSearchBooks($query)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM books WHERE is_active = 1 AND name LIKE ?");
+        $likeQuery = "%" . $query . "%";
+        $stmt->bind_param("s", $likeQuery);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+    //Filtrelenen kitapları kategori yazar ve yayınevlerine göre al
+    public function getFilteredBooks($categoryId, $authorIds = [], $publisherIds = []) {
+        $sql = "SELECT * FROM books WHERE is_active = 1";
+        $params = [];
+        $types = "";
+    
+        // Kategori filtresi
+        if ($categoryId > 0) {
+            $sql .= " AND category_id = ?";
+            $params[] = $categoryId;    // Kategori ID'sini parametreler dizisine ekle
+            $types .= "i";              // Kategori ID'si için türü belirle (i = integer)
+        }
+
+        // Yazarlar filtresi mevcutsa, SQL sorgusuna dahil et   
+        if (!empty($authorIds)) {
+            $sql .= " AND author_id IN (" . implode(',', array_fill(0, count($authorIds), '?')) . ")";
+            $params = array_merge($params, $authorIds);     // Yazar ID'lerini parametreler dizisine ekle
+            $types .= str_repeat('i', count($authorIds));   // Yazar ID'leri için türleri belirle
+        }
+    
+        // Yayınevleri filtresi mevcutsa, SQL sorgusuna dahil et
+        if (!empty($publisherIds)) {
+            $sql .= " AND publisher_id IN (" . implode(',', array_fill(0, count($publisherIds), '?')) . ")";
+            $params = array_merge($params, $publisherIds);      // Yayınevi ID'lerini parametreler dizisine ekle
+            $types .= str_repeat('i', count($publisherIds));    // Yayınevi ID'leri için türleri belirle
+        }
+
+        $stmt = $this->conn->prepare($sql);
+        if ($stmt === false) {
+            die("SQL sorgusu hazırlanamıyor: " . $this->conn->error);
+        }
+    
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+    
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+    
     // Kategori güncelleme işlemi
     public function update($id, $name, $description, $isbn, $image = null, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0)
     {

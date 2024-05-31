@@ -54,6 +54,18 @@ class BookController
         return $this->book->getHomeBooks();
     }
 
+    //Aranan kitapları görüntülemek için kitapları çekme işlemi
+    public function getSearchBooks($query)
+    {
+        return $this->book->getSearchBooks($query);
+    }
+
+    //Filtrelenen kitapları kategori yazar ve yayınevlerine göre al
+    public function getFilteredBooks($categoryId, $authorIds = [], $publisherIds = [])
+    {
+        return $this->book->getFilteredBooks($categoryId, $authorIds, $publisherIds);
+    }
+
     // Kitap güncelleme işlemi
     public function update($id, $name, $description, $isbn, $image = null, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0)
     {

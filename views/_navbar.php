@@ -17,8 +17,8 @@ session_start();
                     <a class="nav-link" href="#"></a>
                 </li>
             </ul>
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="width: 400px;">
+            <form class="d-flex" method="GET">
+                <input class="form-control me-2" type="search" name="search" aria-label="Search" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search'], ENT_QUOTES) : ''; ?>" style="width: 400px;">
                 <button class="btn btn-outline-primary" type="submit">Ara</button>
             </form>
             <ul class="navbar-nav">

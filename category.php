@@ -12,18 +12,36 @@ $categoryId = isset($_GET["id"]) ? intval($_GET["id"]) : 0;
 $category = $categoryController->getById($categoryId);
 $subCategories = $categoryController->getSubcategories($categoryId);
 
-
 $bookController = new BookController();
 $authorController = new AuthorController();
 $publisherController = new PublisherController();
 
-//Yazar ve Yayınevi id'leri geliyorsa çek
 $authorIds = isset($_GET["author_ids"]) ? array_map('intval', $_GET["author_ids"]) : [];
 $publisherIds = isset($_GET["publisher_ids"]) ? array_map('intval', $_GET["publisher_ids"]) : [];
 
-//Kitapları kategoriyle birlikte yazar ve yayınevlerine göre filtreleyerek çek  
-$books = $bookController->getFilteredBooks($categoryId, $authorIds, $publisherIds);
+$limit = 3; // Sayfa başına gösterilecek ürün sayısı
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$offset = ($page - 1) * $limit;
 
+// Filtreleme parametrelerini query string olarak oluşturma
+$filterParams = "";
+if (!empty($authorIds)) {
+    foreach ($authorIds as $id) {
+        $filterParams .= "&author_ids[]=$id";
+    }
+}
+if (!empty($publisherIds)) {
+    foreach ($publisherIds as $id) {
+        $filterParams .= "&publisher_ids[]=$id";
+    }
+}
+
+$books = $bookController->getFilteredBooks($categoryId, $authorIds, $publisherIds, $limit, $offset);
+
+// Toplam kitap sayısını almak için limit ve offset olmadan aynı filtre ile tüm kitapları çek
+$totalBooksResult = $bookController->getFilteredBooks($categoryId, $authorIds, $publisherIds);
+$totalBooks = $totalBooksResult->num_rows;
+$totalPages = ceil($totalBooks / $limit);
 ?>
 
 <div class="container my-3">
@@ -31,25 +49,39 @@ $books = $bookController->getFilteredBooks($categoryId, $authorIds, $publisherId
         <!-- Kategori Menü Alanı -->
         <div class="col-md-3">
             <div class="list-group">
-            <a href=<?php echo $categoryId == 0 ? "index.php" : "category.php?id=".$categoryId; ?> class="list-group-item list-group-item-action">Tüm Kategoriler</a>
-            <!-- Kategorinin Alt Kategorilerini Al -->
-            <?php while ($subCategory = $subCategories->fetch_assoc()) : ?>
-                <a href="category.php?id=<?php echo $subCategory['id']; ?>" class="list-group-item list-group-item-action <?php echo $categoryId == $subCategory['id'] ? 'active' : ''; ?>">
-                    <?php echo htmlspecialchars($subCategory['name'], ENT_QUOTES); ?>
-                </a>
+                <a href=<?php echo $categoryId == 0 ? "index.php" : "category.php?id=" . $categoryId; ?> class="list-group-item list-group-item-action">Tüm Kategoriler</a>
+                <!-- Kategorinin Alt Kategorilerini Al -->
+                <?php while ($subCategory = $subCategories->fetch_assoc()) : ?>
+                    <a href="category.php?id=<?php echo $subCategory['id']; ?>" class="list-group-item list-group-item-action <?php echo $categoryId == $subCategory['id'] ? 'active' : ''; ?>">
+                        <?php echo htmlspecialchars($subCategory['name'], ENT_QUOTES); ?>
+                    </a>
                 <?php endwhile; ?>
-                
-                
             </div>
-            
-            <!-- Filtreleme Alanı -->
-            <?php include "views/_filter-form.php";?>
 
+            <!-- Filtreleme Alanı -->
+            <?php include "views/_filter-form.php"; ?>
         </div>
-        
+
         <!-- Ana İçerik Alanı -->
         <div class="col-md-9">
-            <?php include "views/_book-list.php"; ?>
+            <?php if ($books->num_rows == 0) : ?>
+                <div class="alert alert-warning" role="alert">
+                    Bu kategoride henüz ürün bulunmamaktadır.
+                </div>
+            <?php else : ?>
+                <?php include "views/_book-list.php"; ?>
+
+                <!-- Sayfalama -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+                            <li class="page-item <?php echo $page == $i ? 'active' : ''; ?>">
+                                <a class="page-link" href="category.php?id=<?php echo $categoryId; ?>&page=<?php echo $i . $filterParams; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php endfor; ?>
+                    </ul>
+                </nav>
+            <?php endif; ?>
         </div>
     </div>
 </div>

@@ -8,23 +8,35 @@ require_once 'controllers/publisher-controller.php';
 $bookController = new BookController();
 $authorController = new AuthorController();
 $publisherController = new PublisherController();
-$books = $bookController->getHomeBooks();
 
-// Arama işlemi
+$limit = 3; // Sayfa başına gösterilecek ürün sayısı
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$offset = ($page - 1) * $limit;
+
 $searchQuery = isset($_GET['search']) ? $_GET['search'] : '';
 $books = null;
 $noResultsFound = false;
+$totalBooks = 0;
 
-//Arama sorgusu geliyorsa sorguya göre filtreleyerek çek
 if (!empty($searchQuery)) {
-    $books = $bookController->getSearchBooks($searchQuery);
+    // Arama sonuçlarını getir
+    $allSearchResults = $bookController->getSearchBooks($searchQuery, PHP_INT_MAX, 0); // Tüm sonuçları almak için limit çok büyük
+    $totalBooks = $allSearchResults->num_rows;
+
+    // Sayfalama için gerekli arama sonuçlarını getir
+    $books = $bookController->getSearchBooks($searchQuery, $limit, $offset);
     if ($books->num_rows == 0) {
         $noResultsFound = true;
     }
-} else {    //Arama sorgusu gelmiyorsa anasayfa kitaplarını çek
-    $books = $bookController->getHomeBooks();
-}
+} else {
+    // Anasayfa kitaplarını getir
+    $allHomeBooks = $bookController->getPaginatedHomeBooks(PHP_INT_MAX, 0);
+    $totalBooks = $allHomeBooks->num_rows;
 
+    // Sayfalama için gerekli anasayfa kitaplarını getir
+    $books = $bookController->getPaginatedHomeBooks($limit, $offset);
+}
+$totalPages = ceil($totalBooks / $limit);
 ?>
 
 <div class="container my-3">
@@ -36,23 +48,28 @@ if (!empty($searchQuery)) {
 
         <!-- Ana İçerik Alanı -->
         <div class="col-md-9">
-
-            <!-- Sonuç bulunamadıysa bulunamadı bilgisini ver-->
             <?php if ($noResultsFound) : ?>
                 <div class="alert alert-warning" role="alert">
                     Aradığınız ürün bulunamadı.
                 </div>
-                <?php endif; ?>
-                
-            <!-- Sonuç bulunamadıysa veya aranan değer yoksa anasayfa içeriklerini göster -->
-            <?php if (!$noResultsFound || empty($searchQuery)) 
-            {
+            <?php endif; ?>
+
+            <?php if (!$noResultsFound || empty($searchQuery)) {
                 include "views/_book-list.php";
             } ?>
-
         </div>
+        
+        <!-- Sayfalama -->
+        <nav aria-label="Page navigation example" class="d-flex justify-content-center">
+            <ul class="pagination">
+                <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+                    <li class="page-item <?php echo $page == $i ? 'active' : ''; ?>">
+                        <a class="page-link" href="index.php?page=<?php echo $i; ?><?php echo !empty($searchQuery) ? '&search=' . urlencode($searchQuery) : ''; ?>"><?php echo $i; ?></a>
+                    </li>
+                <?php endfor; ?>
+            </ul>
+        </nav>
     </div>
 </div>
 
-<?php include "views/_ckeditor.php"; ?>
 <?php include "views/_footer.php"; ?>

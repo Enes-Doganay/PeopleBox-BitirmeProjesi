@@ -30,42 +30,6 @@ class BookController
         }
     }
 
-    //Tüm kitapları çekme işlemi
-    public function getAll()
-    {
-        return $this->book->getAll();
-    }
-
-    // Belirli bir kitabı idye göre çekme işlemi
-    public function getById($id)
-    {
-        return $this->book->getById($id);
-    }
-
-    // Belirli bir kategori idye göre çekme işlemi
-    public function getByCategoryId($categoryId)
-    {
-        return $this->book->getByCategoryId($categoryId);
-    }
-
-    // Anasayfada görüntülenecek aktif kitapları çekme işlemi
-    public function getHomeBooks()
-    {
-        return $this->book->getHomeBooks();
-    }
-
-    //Aranan kitapları görüntülemek için kitapları çekme işlemi
-    public function getSearchBooks($query)
-    {
-        return $this->book->getSearchBooks($query);
-    }
-
-    //Filtrelenen kitapları kategori yazar ve yayınevlerine göre al
-    public function getFilteredBooks($categoryId, $authorIds = [], $publisherIds = [])
-    {
-        return $this->book->getFilteredBooks($categoryId, $authorIds, $publisherIds);
-    }
-
     // Kitap güncelleme işlemi
     public function update($id, $name, $description, $isbn, $image = null, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0)
     {
@@ -88,5 +52,40 @@ class BookController
         } else {
             return "Silme başarısız: " . $result;
         }
+    }
+
+    //Tüm kitapları çekme işlemi
+    public function getAll()
+    {
+        return $this->book->getAll();
+    }
+
+    // Belirli bir kitabı idye göre çekme işlemi
+    public function getById($id)
+    {
+        return $this->book->getById($id);
+    }
+
+    // Belirli bir kategori idye göre çekme işlemi
+    public function getByCategoryId($categoryId)
+    {
+        return $this->book->getByCategoryId($categoryId);
+    }
+
+    //Aranan kitapları görüntülemek için kitapları çekme işlemi
+    public function getSearchBooks($searchQuery, $limit, $offset)
+    {
+        return $this->book->getSearchBooks($searchQuery, $limit, $offset);
+    }
+
+    public function getPaginatedHomeBooks($limit, $offset)
+    {
+        return $this->book->getPaginatedHomeBooks($limit, $offset);
+    }
+
+    //Filtrelenen kitapları kategori yazar ve yayınevlerine göre al
+    public function getFilteredBooks($categoryId, $authorIds = [], $publisherIds = [], $limit = null, $offset = null)
+    {
+        return $this->book->getFilteredBooks($categoryId, $authorIds, $publisherIds, $limit, $offset);
     }
 }

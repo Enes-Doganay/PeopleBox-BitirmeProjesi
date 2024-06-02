@@ -70,9 +70,8 @@ if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"]))
                         <input type="password" class="form-control" name="password" id="password">
                         <?php if (!empty($password_err)) echo "<div class='text-danger'>{$password_err}</div>"; ?>
                     </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                        <label class="form-check-label" for="exampleCheck1">Beni Hatırla</label>
+                    <div class="mb-3">
+                    <p><a href="reset-password-request.php" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Şifremi Unuttum</a></p>
                     </div>
                     <button type="submit" name="login" value="Submit" class="btn btn-primary">Giriş Yap</button>
                     </form>

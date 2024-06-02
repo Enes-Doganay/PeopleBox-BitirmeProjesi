@@ -73,7 +73,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
                         window.location.href = 'login.php';
                     }, 2000); // 2 saniye bekle
                   </script>";
-                  
         } else {
             echo "<div class='alert alert-danger'>{$result_message}</div>";
         }
@@ -123,39 +122,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
     </div>
 </div>
 
-    <!-- Başarılı Kayıt Modalı -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title" id="successModalLabel">Kayıt Başarılı</h5>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Kayıt işlemi başarılı! <br> Giriş sayfasına yönlendiriliyorsunuz...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" id="redirectButton">Tamam</button>
-                </div>
+<!-- Başarılı Kayıt Modalı -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="successModalLabel">Kayıt Başarılı</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Kayıt işlemi başarılı! <br> Giriş sayfasına yönlendiriliyorsunuz...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="redirectButton">Tamam</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        $(document).ready(function() {        
-            <?php if (!empty($success_message)): ?>
-            $('#successModal').modal('show')
-            setTimeout(function() {
-                window.location.href = 'login.php';
-            }, 2000); // 2 saniye bekle
-            <?php endif; ?>
-
-            $('#redirectButton').on('click', function() {
-                window.location.href = 'login.php';
-            });
-        });
-    </script>
-</body>
-</html>
+<?php
+// Kayıt başarılıysa modalı çağır
+if (!empty($success_message)) {
+    include "views/_modal.php";
+    renderSuccessModal($success_message);
+}
+?>
 
 <?php include "views/_footer.php"; ?>

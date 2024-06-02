@@ -68,5 +68,31 @@ class user {
         $result = $stmt->get_result();
         return $result->num_rows > 0;
     }    
+
+    public function setResetToken($email, $token, $expires) {
+        $stmt = $this->conn->prepare("UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE email = ?");
+        $stmt->bind_param("sss", $token, $expires, $email);
+        return $stmt->execute();
+    }
+
+    public function getUserByResetToken($token) {
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE reset_token = ?");
+        $stmt->bind_param("s", $token);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    public function updatePassword($email, $password) {
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $stmt = $this->conn->prepare("UPDATE users SET password = ? WHERE email = ?");
+        $stmt->bind_param("ss", $hashedPassword, $email);
+        return $stmt->execute();
+    }
+
+    public function clearResetToken($email) {
+        $stmt = $this->conn->prepare("UPDATE users SET reset_token = NULL, reset_token_expires = NULL WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        return $stmt->execute();
+    }
 }
 ?>

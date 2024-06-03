@@ -42,7 +42,7 @@ session_start();
                 }
                 ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Sepetim
+                    <a class="nav-link" href="cart.php">Sepetim
                     <i class="fa-solid fa-cart-shopping"></i>
                     </a>
                 </li>

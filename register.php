@@ -5,6 +5,12 @@ include "views/_navbar.php";
 require_once 'controllers/user-controller.php';
 include "libs/functions.php";
 
+$controller = new UserController();
+
+if ($controller->isLogged()) {
+    header('Location: index.php');
+}
+
 // CSRF token oluşturma ve kontrol etme
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -59,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
 
     //Hata yoksa kayıt işlemini sağla varsa hata mesajı göster
     if (empty($firstName_err) && empty($lastName_err) && empty($email_err) && empty($password_err) && empty($confirmPassword_err)) {
-        $controller = new UserController();
+
         $result_message = $controller->register($firstName, $lastName, $email, $password);
         if (strpos($result_message, "başarılı") !== false) {
             $success_message = $result_message;

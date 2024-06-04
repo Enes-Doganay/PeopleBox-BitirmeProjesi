@@ -1,6 +1,14 @@
-<?php include "views/_header.php"; ?>
-<?php include "views/_navbar.php"; ?>
+<?php
+include "views/_header.php"; 
+include "views/_navbar.php"; 
+require_once "controllers/user-controller.php" ;
 
+$userController = new UserController();
+
+if(!$userController->isAdmin()){
+    header('Location: index.php');
+}
+?>
 <div class="container my-3">
     <div class="row">
         <div class="col-md-3">

@@ -3,6 +3,13 @@ include "views/_header.php";
 include "views/_navbar.php";
 include "libs/functions.php";
 require_once 'controllers/publisher-controller.php';
+require_once "controllers/user-controller.php" ;
+
+$userController = new UserController();
+
+if(!$userController->isAdmin()){
+    header('Location: index.php');
+}
 
 //Publisher bilgilerini çekme
 $publisherController = new PublisherController();

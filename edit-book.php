@@ -6,7 +6,13 @@ require_once 'controllers/book-controller.php';
 require_once 'controllers/category-controller.php';
 require_once 'controllers/author-controller.php';
 require_once 'controllers/publisher-controller.php';
+require_once "controllers/user-controller.php" ;
 
+$userController = new UserController();
+
+if(!$userController->isAdmin()){
+    header('Location: index.php');
+}
 
 $bookName =  $pageCount = $isbn = $image = $categoryId = $authorId = $publisherId = "";
 $bookName_err = $pageCount_err = $isbn_err = $image_err = $categoryId_err = $authorId_err = $publisherId_err = "";

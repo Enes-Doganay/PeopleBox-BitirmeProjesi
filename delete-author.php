@@ -1,5 +1,12 @@
 <?php
 require_once 'controllers/author-controller.php';
+require_once "controllers/user-controller.php" ;
+
+$userController = new UserController();
+
+if(!$userController->isAdmin()){
+    header('Location: index.php');
+}
 
 //Author id'yi çek
 $id = $_GET["id"];

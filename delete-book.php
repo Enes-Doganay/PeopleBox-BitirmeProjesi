@@ -1,5 +1,12 @@
 <?php
 require_once 'controllers/book-controller.php';
+require_once "controllers/user-controller.php" ;
+
+$userController = new UserController();
+
+if(!$userController->isAdmin()){
+    header('Location: index.php');
+}
 
 $bookController = new BookController();
 

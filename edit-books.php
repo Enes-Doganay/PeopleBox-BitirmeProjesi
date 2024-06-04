@@ -6,7 +6,13 @@ require_once 'controllers/book-controller.php';
 require_once 'controllers/category-controller.php';
 require_once 'controllers/author-controller.php';
 require_once 'controllers/publisher-controller.php';
+require_once "controllers/user-controller.php" ;
 
+$userController = new UserController();
+
+if(!$userController->isAdmin()){
+    header('Location: index.php');
+}
 
 //Kitap bilgilerini çekme
 $bookController = new BookController();

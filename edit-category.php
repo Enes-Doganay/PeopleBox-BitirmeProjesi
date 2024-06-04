@@ -4,6 +4,13 @@ include "views/_header.php";
 include "views/_navbar.php";
 include "libs/functions.php";
 require_once 'controllers/category-controller.php';
+require_once "controllers/user-controller.php" ;
+
+$userController = new UserController();
+
+if(!$userController->isAdmin()){
+    header('Location: index.php');
+}
 
 //Kategori bilgilerini çekme
 $categoryController = new CategoryController();

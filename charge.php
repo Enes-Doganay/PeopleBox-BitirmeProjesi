@@ -1,27 +1,74 @@
 <?php
 // Stripe PHP kütüphanesini dahil et
-require 'vendor/autoload.php';
+session_start();
+
+require_once 'vendor/autoload.php';
+require_once 'controllers/transaction-controller.php';
+require_once 'controllers/cart-controller.php';
+require_once 'controllers/book-controller.php';
+require_once 'controllers/user-controller.php';
+require_once 'libs/mailer.php';
 
 // Stripe API anahtarını ayarla
 \Stripe\Stripe::setApiKey('sk_test_51PNEIYIzrk4FBfXJkKaRyMdNSwnVoEuZGvH9wSxSHFn39FNLziaBP3qnLjCuKKOlXRVYuHxMXdfs6Xho5bOGfUw200DCZlvLAQ');
 
 // Formdan gelen Stripe token'ını al
 $token = $_POST['stripeToken'];
-$amount = $_POST['totalAmount']; // Total amount in cents
+$amount = $_POST['totalAmount']; // Toplam tutar kuruş olarak
+
+$userController = new UserController();
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: index.php');
+}
+
+$userId = $_SESSION['user_id'];
+$user = $userController->getById($userId);
 
 try {
     // Stripe üzerinden ödeme işlemini gerçekleştir
     $charge = \Stripe\Charge::create([
         'amount' => $amount, // toplam miktar
         'currency' => 'try',
-        'description' => 'Test Ödemesi',
+        'description' => 'Sipariş Ödemesi',
         'source' => $token,
     ]);
 
+    // İşlem başarılı olduğunda, transaction veritabanına kaydediyoruz
+    $transactionController = new TransactionController();
+    $cartController = new CartController();
+    $bookController = new BookController();
+    $items = $cartController->getCartItems();
+
+    // Fatura bilgilerini hazırlıyoruz
+    $invoiceItems = [];
+    foreach ($items as $bookId => $quantity) {
+        $book = $bookController->getById($bookId);
+        $invoiceItems[] = [
+            'name' => $book['name'],
+            'quantity' => $quantity,
+            'price' => $book['price'] * $quantity
+        ];
+    }
+
+    $transactionController->saveTransaction($userId, $charge, $items);
+
+    // Fatura göndermek için Mailer sınıfını kullan
+    $mailer = new Mailer();
+    if ($mailer->sendInvoice($user['email'], $invoiceItems, $amount)) {
+        echo 'Fatura başarıyla gönderildi.';
+    } else {
+        echo 'Fatura gönderilemedi.';
+    }
+
+    // Sepeti temizle
+    $cartController->clearCart();
+
     // Ödeme başarılı olduğunda
-    echo 'Ödeme başarılı!';
+    header('Location: success.php');
+    exit();
+
 } catch (\Stripe\Exception\CardException $e) {
-    // Hata durumunda
     echo 'Ödeme başarısız: ' . $e->getError()->message;
 } catch (\Stripe\Exception\RateLimitException $e) {
     echo 'Çok fazla istek yapıldı. Lütfen daha sonra tekrar deneyin.';

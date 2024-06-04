@@ -43,6 +43,10 @@ class UserController {
         header('Location: index.php');
     }
 
+    public function getById($id){
+        return $this->user->getById($id);
+    }
+
     public function isAdmin() {
         return $this->user->isAdmin();
     }

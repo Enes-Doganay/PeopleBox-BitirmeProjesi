@@ -14,8 +14,8 @@ if(!$userController->isAdmin()){
     header('Location: index.php');
 }
 
-$bookName =  $pageCount = $isbn = $image = $categoryId = $authorId = $publisherId = "";
-$bookName_err = $pageCount_err = $isbn_err = $image_err = $categoryId_err = $authorId_err = $publisherId_err = "";
+$bookName =  $pageCount = $isbn = $image = $categoryId = $authorId = $publisherId = $price = $stock = "";
+$bookName_err = $pageCount_err = $isbn_err = $image_err = $categoryId_err = $authorId_err = $publisherId_err = $price_err = $stock_err = "";
 
 
 //Kitap bilgilerini çekme
@@ -39,6 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["create"])) {
     $description = control_input($_POST["description"]);
     $isbn = control_input($_POST["isbn"]);
     $pageCount = control_input($_POST["pageCount"]);
+    $price = control_input($_POST["price"]);
+    $stock = control_input($_POST["stock"]);
     $categoryId = intval($_POST["categoryId"]);
     $authorId = intval($_POST["authorId"]);
     $publisherId = intval($_POST["publisherId"]);
@@ -71,7 +73,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["create"])) {
         }
     }
     
-    
     //Sayfa sayısı kontrolü
     if (empty($pageCount)) {
         $pageCount_err = "Sayfa sayısı girmelisiniz.";
@@ -94,9 +95,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["create"])) {
         $publisherId_err = "Yayınevi seçmelisiniz.";
     }
 
+        //Fiyat kontrolü
+        if (empty($price)) {
+            $price_err = "Fiyat için bir değer girmelisiniz.";
+        } else if (!is_numeric($price)) {
+            $price_err = "Fiyat için sayısal değer girmelisiniz.";
+        } else if ($price < 0) {
+            $price_err = "Fiyat negatif olamaz.";
+        }
+    
+        //Stok kontrolü
+        if (empty($stock)) {
+            $stock_err = "Stok için bir değer girmelisiniz.";
+        } else if (!is_numeric($stock)) {
+            $stock_err = "Stok için sayısal değer girmelisiniz.";
+        } else if ($stock < 0) {
+            $stock_err = "Stok negatif olamaz.";
+        }
+
     //Hata yoksa ekle
-    if (empty($bookName_err) && empty($isbn_err) && empty($image_err) && empty($pageCount_err) && empty($categoryId_err) && empty($authorId_err) && empty($publisherId_err)) {
-        $result_message = $bookController->create($bookName, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome);
+    if (empty($bookName_err) && empty($isbn_err) && empty($image_err) && empty($pageCount_err) && empty($categoryId_err) && empty($authorId_err) && empty($publisherId_err) && empty($price_err) && empty($stock_err)) {
+        $result_message = $bookController->create($bookName, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome, $price, $stock);
         
         if (strpos($result_message, "başarılı") !== false) {
             echo "<div class='alert alert-success'>{$result_message}</div>";
@@ -153,6 +172,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["create"])) {
                     <label for="pageCount" class="form-label">Sayfa Sayısı</label>
                     <input type="text" class="form-control <?php echo !empty($pageCount_err) ? 'is-invalid' : ''; ?>" id="pageCount" name="pageCount" value="<?php echo htmlspecialchars($pageCount); ?>">
                     <div class="invalid-feedback"><?php echo $pageCount_err; ?></div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <!-- Fiyat -->
+                        <div class="mb-3 col-md-6">
+                            <label for="price" class="form-label">Fiyat</label>
+                            <input type="text" class="form-control <?php echo !empty($price_err) ? 'is-invalid' : ''; ?>" id="price" name="price" value="<?php echo htmlspecialchars($price); ?>">
+                            <div class="invalid-feedback"><?php echo $price_err; ?></div>
+                        </div>
+                        <!-- Stok -->
+                        <div class="mb-3 col-md-6">
+                            <label for="stock" class="form-label">Stok</label>
+                            <input type="text" class="form-control <?php echo !empty($stock_err) ? 'is-invalid' : ''; ?>" id="stock" name="stock" value="<?php echo htmlspecialchars($stock); ?>">
+                            <div class="invalid-feedback"><?php echo $stock_err; ?></div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Kategoriler -->

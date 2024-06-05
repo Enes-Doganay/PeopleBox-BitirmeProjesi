@@ -15,13 +15,13 @@ class BookController
     }
 
     // Yeni kitap oluşturma işlemi
-    public function create($name, $description = null, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0)
+    public function create($name, $description = null, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0, $price, $stock)
     {
         if ($this->book->isBookExists($isbn)) {
             return "Bu kitap zaten kayıtlı.";
         }
 
-        $result = $this->book->create($name, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome);
+        $result = $this->book->create($name, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome, $price, $stock);
 
         if ($result === true) {
             return "Kitap ekleme başarılı";
@@ -31,9 +31,9 @@ class BookController
     }
 
     // Kitap güncelleme işlemi
-    public function update($id, $name, $description, $isbn, $image = null, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0)
+    public function update($id, $name, $description, $isbn, $image = null, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0, $price, $stock)
     {
-        $result = $this->book->update($id, $name, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome);
+        $result = $this->book->update($id, $name, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome, $price, $stock);
 
         if ($result === true) {
             return "Güncelleme başarılı";

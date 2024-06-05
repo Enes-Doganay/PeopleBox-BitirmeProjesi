@@ -11,10 +11,10 @@ class Book
     }
 
     // Yeni kitap oluşturma işlemi
-    public function create($name, $description = null, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0)
+    public function create($name, $description = null, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0, $price, $stock)
     {
-        $stmt = $this->conn->prepare("INSERT INTO books (name,description,isbn,image,page_count,category_id,author_id,publisher_id, is_active, is_home) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssiiiiii", $name, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome);
+        $stmt = $this->conn->prepare("INSERT INTO books (name,description,isbn,image,page_count,category_id,author_id,publisher_id, is_active, is_home, price, stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssiiiiiiii", $name, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome, $price, $stock);
         if ($stmt->execute()) {
             return true;
         } else {
@@ -23,10 +23,10 @@ class Book
     }
 
     // Kategori güncelleme işlemi
-    public function update($id, $name, $description, $isbn, $image = null, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0)
+    public function update($id, $name, $description, $isbn, $image = null, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0, $price, $stock)
     {
-        $stmt = $this->conn->prepare("UPDATE books SET name = ?, description = ?, isbn = ?, image = ?, page_count = ?, category_id = ?, author_id = ?, publisher_id = ? , is_active = ?, is_home = ? WHERE id = ?");
-        $stmt->bind_param("ssssiiiiiii", $name, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome, $id);
+        $stmt = $this->conn->prepare("UPDATE books SET name = ?, description = ?, isbn = ?, image = ?, page_count = ?, category_id = ?, author_id = ?, publisher_id = ? , is_active = ?, is_home = ?, price = ?, stock = ? WHERE id = ?");
+        $stmt->bind_param("ssssiiiiiiiii", $name, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome, $price, $stock ,$id);
         return $stmt->execute();
     }
 

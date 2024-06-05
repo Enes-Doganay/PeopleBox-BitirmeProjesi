@@ -19,12 +19,18 @@ $publisher = $publisherController->getById($book["publisher_id"]);
 
 $cartController = new CartController();
 
-if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_to_cart"])){
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_to_cart"])) {
     $productId = $_POST["product_id"];
     $quantity = 1;
-    $cartController->addToCart($productId,$quantity);
-    header("Location: cart.php"); // Sepet sayfasına yönlendirin
-    exit();
+
+    // Stok kontrolü
+    if ($book["stock"] >= $quantity) {
+        $cartController->addToCart($productId, $quantity);
+        header("Location: cart.php"); // Sepet sayfasına yönlendir
+        exit();
+    } else {
+        $error = "Yeterli stok yok!";
+    }
 }
 
 
@@ -50,6 +56,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_to_cart"])){
                             <p class="card-text"><small class="text-body-secondary"><b>ISBN :</b> <?php echo $book["isbn"]; ?></small></p>
                         </div>
                     </div>
+                    <p class="card-text"><small class="text-body-secondary"><b>Stok Durumu:</b> <?php echo $book["stock"]; ?></small></p>
+                    <?php if(isset($error)): ?>
+                        <div class="alert alert-danger"><?php echo $error; ?></div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Sepete Ekle Formu -->
@@ -60,11 +70,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_to_cart"])){
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
-
 </div>
+
 <div class="container py-3">
     <h2 class="card-title">Ürün Açıklaması</h2>
     <hr>

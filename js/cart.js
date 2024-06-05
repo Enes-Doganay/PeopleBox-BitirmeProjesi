@@ -17,7 +17,14 @@ $(document).ready(function() {
 
     function updateQuantity(productId, quantity) {
         $.post("cart.php", { productId: productId, quantity: quantity }, function(data) {
-            location.reload();
+            var response = JSON.parse(data);
+            if (response.status === 'success') {
+                location.reload();
+            } else {
+                alert(response.message);
+            }
+        }).fail(function() {
+            alert('Sunucuda bir hata oluştu.');
         });
     }
 });

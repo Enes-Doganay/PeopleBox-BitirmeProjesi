@@ -38,6 +38,12 @@ class Book
         return $stmt->execute();
     }
 
+    //Stok güncelleme işlemi
+    public function updateStock($id, $newStock){
+        $stmt = $this->conn->prepare("UPDATE books SET stock = ? WHERE id = ?");
+        $stmt->bind_param("ii", $newStock,$id);
+        $stmt->execute();
+    }
 
     //Tüm kitapları çekme işlemi
     public function getAll()
@@ -97,13 +103,6 @@ class Book
             $params = array_merge($params, $categoryIds);
             $types .= str_repeat('i', count($categoryIds));
         }
-
-
-        // if ($categoryIds > 0) {
-        //     $sql .= " AND category_id = ?";
-        //     $params[] = $categoryIds;
-        //     $types .= "i";
-        // }
 
         if (!empty($authorIds)) {
             $sql .= " AND author_id IN (" . implode(',', array_fill(0, count($authorIds), '?')) . ")";

@@ -54,6 +54,12 @@ class BookController
         }
     }
 
+    //Stok güncelleme işlemi
+    public function updateStock($id, $newStock)
+    {
+        $this->book->updateStock($id, $newStock);
+    }
+
     //Tüm kitapları çekme işlemi
     public function getAll()
     {
@@ -86,7 +92,6 @@ class BookController
     //Filtrelenen kitapları kategori yazar ve yayınevlerine göre al
     public function getFilteredBooksByCategories($categoryIds = [], $authorIds = [], $publisherIds = [], $limit = null, $offset = null)
     {
-        return $this->book->getFilteredBooksByCategories($categoryIds,$authorIds,$publisherIds,$limit,$offset);
+        return $this->book->getFilteredBooksByCategories($categoryIds, $authorIds, $publisherIds, $limit, $offset);
     }
 }
-?>

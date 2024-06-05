@@ -19,7 +19,7 @@ $amount = $_POST['totalAmount']; // Toplam tutar kuruş olarak
 $userController = new UserController();
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: index.php');
+    header('Location: login.php');
 }
 
 $userId = $_SESSION['user_id'];
@@ -49,6 +49,10 @@ try {
             'quantity' => $quantity,
             'price' => $book['price'] * $quantity
         ];
+
+        // Stok güncelleme
+        $newStock = $book['stock'] - $quantity;
+        $bookController->updateStock($bookId, $newStock);
     }
 
     $transactionController->saveTransaction($userId, $charge, $items);

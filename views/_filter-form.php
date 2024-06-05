@@ -11,6 +11,7 @@ $publishers = $publisherController->getAll();
 
 <form method="GET" action="category.php">
     <div class="my-2">
+        <input type="text" hidden name="id" value="<?php echo isset($_GET['id']) ? $_GET['id'] : ''?>">
         <label for="publisher-search" class="form-label"><b>Yayınevi Ara</b></label>
         <!-- Kullanıcının yayınevi araması için metin girişi -->
         <input type="text" id="publisher-search" class="form-control" onkeyup="filterOptions('publisher-search', 'publishers-list')">

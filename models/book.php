@@ -129,6 +129,56 @@ class Book
         $stmt->execute();
         return $stmt->get_result();
     }
+    public function getFilteredBooksByCategories($categoryIds = [], $authorIds = [], $publisherIds = [], $limit = null, $offset = null)
+    {
+        $sql = "SELECT * FROM books WHERE is_active = 1";
+        $params = [];
+        $types = "";
+
+        if(!empty($categoryIds)){
+            $sql .= " AND category_id IN (" . implode(',', array_fill(0, count($categoryIds), '?')) . ")";
+            $params = array_merge($params, $categoryIds);
+            $types .= str_repeat('i', count($categoryIds));
+        }
+
+
+        // if ($categoryIds > 0) {
+        //     $sql .= " AND category_id = ?";
+        //     $params[] = $categoryIds;
+        //     $types .= "i";
+        // }
+
+        if (!empty($authorIds)) {
+            $sql .= " AND author_id IN (" . implode(',', array_fill(0, count($authorIds), '?')) . ")";
+            $params = array_merge($params, $authorIds);
+            $types .= str_repeat('i', count($authorIds));
+        }
+
+        if (!empty($publisherIds)) {
+            $sql .= " AND publisher_id IN (" . implode(',', array_fill(0, count($publisherIds), '?')) . ")";
+            $params = array_merge($params, $publisherIds);
+            $types .= str_repeat('i', count($publisherIds));
+        }
+
+        if ($limit !== null && $offset !== null) {
+            $sql .= " LIMIT ? OFFSET ?";
+            $params[] = $limit;
+            $params[] = $offset;
+            $types .= "ii";
+        }
+
+        $stmt = $this->conn->prepare($sql);
+        if ($stmt === false) {
+            die("SQL sorgusu hazırlanamıyor: " . $this->conn->error);
+        }
+
+        if (!empty($params)) {
+            $stmt->bind_param($types, ...$params);
+        }
+
+        $stmt->execute();
+        return $stmt->get_result();
+    }
 
     // Belirli bir isbnin veritabanında var olup olmadığını kontrol etme işlemi (isbn unique)
     public function isBookExists($isbn)
@@ -141,3 +191,4 @@ class Book
         return $result->num_rows > 0;
     }
 }
+?>

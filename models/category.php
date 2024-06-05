@@ -52,6 +52,13 @@ class Category
         $stmt->execute();
         return $stmt->get_result();
     }
+    public function getSubCategoryIds($parentId)
+    {
+        $stmt = $this->conn->prepare("SELECT id FROM categories WHERE parent_id = ?");
+        $stmt->bind_param("i", $parentId);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
 
     // Kategori güncelleme işlemi
     public function update($id, $name, $isActive = 1, $parentId = null)
@@ -80,3 +87,4 @@ class Category
         return $result->num_rows > 0;
     }
 }
+?>

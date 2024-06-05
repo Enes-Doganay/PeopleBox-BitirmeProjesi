@@ -9,8 +9,14 @@ require_once 'controllers/publisher-controller.php';
 $categoryController = new CategoryController();
 $categoryId = isset($_GET["id"]) ? intval($_GET["id"]) : 0;
 
-$category = $categoryController->getById($categoryId);
 $subCategories = $categoryController->getSubcategories($categoryId);
+$subCategoryIds = $categoryController->getSubcategoryIds($categoryId);
+$subCategoryIds = array_column($subCategoryIds->fetch_all(MYSQLI_ASSOC), 'id');
+
+$categories = $subCategories;
+$categoryIds = [$categoryId];
+
+$categoryIds = array_merge([$categoryId], $subCategoryIds);
 
 $bookController = new BookController();
 $authorController = new AuthorController();
@@ -36,10 +42,10 @@ if (!empty($publisherIds)) {
     }
 }
 
-$books = $bookController->getFilteredBooks($categoryId, $authorIds, $publisherIds, $limit, $offset);
+$books = $bookController->getFilteredBooksByCategories($categoryIds, $authorIds, $publisherIds, $limit, $offset);
 
 // Toplam kitap sayısını almak için limit ve offset olmadan aynı filtre ile tüm kitapları çek
-$totalBooksResult = $bookController->getFilteredBooks($categoryId, $authorIds, $publisherIds);
+$totalBooksResult = $bookController->getFilteredBooksByCategories($categoryIds, $authorIds, $publisherIds);
 $totalBooks = $totalBooksResult->num_rows;
 $totalPages = ceil($totalBooks / $limit);
 ?>

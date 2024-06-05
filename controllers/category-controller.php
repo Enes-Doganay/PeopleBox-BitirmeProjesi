@@ -47,6 +47,10 @@ class CategoryController
     {
         return $this->category->getSubcategories($parent_id);
     }
+    public function getSubcategoryIds($parent_id)
+    {
+        return $this->category->getSubCategoryIds($parent_id);
+    }
 
     // Kategori güncelleme işlemi
     public function update($id, $name, $isActive, $parent_id = null)
@@ -72,3 +76,4 @@ class CategoryController
         }
     }
 }
+?>

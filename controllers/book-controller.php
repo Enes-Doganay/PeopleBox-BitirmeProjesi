@@ -88,4 +88,9 @@ class BookController
     {
         return $this->book->getFilteredBooks($categoryId, $authorIds, $publisherIds, $limit, $offset);
     }
+    public function getFilteredBooksByCategories($categoryIds = [], $authorIds = [], $publisherIds = [], $limit = null, $offset = null)
+    {
+        return $this->book->getFilteredBooksByCategories($categoryIds,$authorIds,$publisherIds,$limit,$offset);
+    }
 }
+?>

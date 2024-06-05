@@ -84,10 +84,6 @@ class BookController
     }
 
     //Filtrelenen kitapları kategori yazar ve yayınevlerine göre al
-    public function getFilteredBooks($categoryId, $authorIds = [], $publisherIds = [], $limit = null, $offset = null)
-    {
-        return $this->book->getFilteredBooks($categoryId, $authorIds, $publisherIds, $limit, $offset);
-    }
     public function getFilteredBooksByCategories($categoryIds = [], $authorIds = [], $publisherIds = [], $limit = null, $offset = null)
     {
         return $this->book->getFilteredBooksByCategories($categoryIds,$authorIds,$publisherIds,$limit,$offset);

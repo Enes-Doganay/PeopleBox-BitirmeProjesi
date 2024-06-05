@@ -85,50 +85,7 @@ class Book
         return $stmt->get_result();
     }
 
-    //Filtrelenen kitapları kategori yazar ve yayınevlerine göre al
-    public function getFilteredBooks($categoryId, $authorIds = [], $publisherIds = [], $limit = null, $offset = null)
-    {
-        $sql = "SELECT * FROM books WHERE is_active = 1";
-        $params = [];
-        $types = "";
-
-        if ($categoryId > 0) {
-            $sql .= " AND category_id = ?";
-            $params[] = $categoryId;
-            $types .= "i";
-        }
-
-        if (!empty($authorIds)) {
-            $sql .= " AND author_id IN (" . implode(',', array_fill(0, count($authorIds), '?')) . ")";
-            $params = array_merge($params, $authorIds);
-            $types .= str_repeat('i', count($authorIds));
-        }
-
-        if (!empty($publisherIds)) {
-            $sql .= " AND publisher_id IN (" . implode(',', array_fill(0, count($publisherIds), '?')) . ")";
-            $params = array_merge($params, $publisherIds);
-            $types .= str_repeat('i', count($publisherIds));
-        }
-
-        if ($limit !== null && $offset !== null) {
-            $sql .= " LIMIT ? OFFSET ?";
-            $params[] = $limit;
-            $params[] = $offset;
-            $types .= "ii";
-        }
-
-        $stmt = $this->conn->prepare($sql);
-        if ($stmt === false) {
-            die("SQL sorgusu hazırlanamıyor: " . $this->conn->error);
-        }
-
-        if (!empty($params)) {
-            $stmt->bind_param($types, ...$params);
-        }
-
-        $stmt->execute();
-        return $stmt->get_result();
-    }
+    // //Filtrelenen kitapları kategori yazar ve yayınevlerine göre al
     public function getFilteredBooksByCategories($categoryIds = [], $authorIds = [], $publisherIds = [], $limit = null, $offset = null)
     {
         $sql = "SELECT * FROM books WHERE is_active = 1";

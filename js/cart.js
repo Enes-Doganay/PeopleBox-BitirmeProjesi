@@ -15,16 +15,25 @@ $(document).ready(function() {
         }
     });
 
+    $(".btn-remove").click(function(event) {
+        event.preventDefault();
+        var productId = $(this).data('id');
+        removeFromCart(productId);
+    });
+
     function updateQuantity(productId, quantity) {
-        $.post("cart.php", { productId: productId, quantity: quantity }, function(data) {
-            var response = JSON.parse(data);
-            if (response.status === 'success') {
-                location.reload();
-            } else {
-                alert(response.message);
-            }
-        }).fail(function() {
-            alert('Sunucuda bir hata oluştu.');
+        $.post("cart.php", { productId: productId, quantity: quantity }, function() {
+            location.reload();
+        }).fail(function(xhr) {
+            alert(xhr.status === 500 ? 'Sunucuda bir hata oluştu: ' + xhr.responseText : 'Geçersiz istek.');
+        });
+    }
+
+    function removeFromCart(productId) {
+        $.post("cart.php", { productId: productId, action: 'delete' }, function() {
+            location.reload();
+        }).fail(function(xhr) {
+            alert(xhr.status === 500 ? 'Sunucuda bir hata oluştu: ' + xhr.responseText : 'Geçersiz istek.');
         });
     }
 });

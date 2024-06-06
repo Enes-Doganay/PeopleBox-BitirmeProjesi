@@ -23,7 +23,7 @@ session_start();
             </form>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Favori Listem</a>
+                    <a class="nav-link" href="favorite-list.php">Favorilerim</a>
                 </li>
                 <?php
 

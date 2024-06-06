@@ -10,7 +10,7 @@ class Category
         $this->conn = $conn;
     }
 
-     // Yeni kategori oluşturma işlemi
+    // Yeni kategori oluşturma işlemi
     public function create($name, $isActive = 1, $parentId = null)
     {
         $stmt = $this->conn->prepare("INSERT INTO categories (name, is_active, parent_id) VALUES (?, ?, ?)");

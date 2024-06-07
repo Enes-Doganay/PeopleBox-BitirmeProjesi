@@ -41,7 +41,7 @@ if ($insufficientStock) {
             </div>
             <!-- Toplam tutarı saklamak için gizli bir input alanı -->
             <input type="hidden" name="totalAmount" value="<?php echo $totalPrice * 100; ?>"> <!-- Total amount in cents -->
-            <button>Ödeme Yap</button>
+            <button class="btn btn-primary">Ödeme Yap</button>
         </form>
     </div>
 
@@ -49,5 +49,4 @@ if ($insufficientStock) {
 <?php
 }
 
-include "views/_footer.php";
-?>
+include "views/_footer.php";?>

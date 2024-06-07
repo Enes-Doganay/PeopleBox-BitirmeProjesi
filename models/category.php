@@ -21,8 +21,10 @@ class Category
             $stmt->bind_param("sii", $name, $isActive, $parentId);
         }
         if ($stmt->execute()) {
+            $stmt->close();
             return true;
-        } else {
+            } else {
+            $stmt->close();
             throw new mysqli_sql_exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
         }
     }
@@ -32,7 +34,9 @@ class Category
     {
         $stmt = $this->conn->prepare("SELECT * FROM categories");
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 
     // Belirli bir kategoriyi idye göre çekme işlemi
@@ -41,7 +45,9 @@ class Category
         $stmt = $this->conn->prepare("SELECT * FROM categories WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $result;
     }
 
     // Alt kategorileri belirli bir üst kategoriye göre çekme işlemi
@@ -50,7 +56,9 @@ class Category
         $stmt = $this->conn->prepare("SELECT * FROM categories WHERE parent_id = ?");
         $stmt->bind_param("i", $parentId);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
         }
         
     // Alt kategorilerin idlerini belirli bir üst kategoriye göre çekme işlemi
@@ -59,7 +67,9 @@ class Category
         $stmt = $this->conn->prepare("SELECT id FROM categories WHERE parent_id = ?");
         $stmt->bind_param("i", $parentId);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 
     // Kategori güncelleme işlemi
@@ -67,7 +77,9 @@ class Category
     {
         $stmt = $this->conn->prepare("UPDATE categories SET name = ?, is_active = ?, parent_id = ? WHERE id = ?");
         $stmt->bind_param("siii", $name, $isActive, $parentId, $id);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
 
     // Kategori silme işlemi
@@ -75,7 +87,9 @@ class Category
     {
         $stmt = $this->conn->prepare("DELETE FROM categories WHERE id = ?");
         $stmt->bind_param("i", $id);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
 
     //Kategori silerken bağlı olduğu kategoriden dolayı foreign key hatası vermesin diye parentini null olarak ata
@@ -83,7 +97,9 @@ class Category
         $query = "UPDATE categories SET parent_id = NULL WHERE parent_id = ?";
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("i", $parentId);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
 
     // Belirli bir kategori adının veritabanında var olup olmadığını kontrol etme işlemi (Kategory name unique)
@@ -94,6 +110,7 @@ class Category
         $stmt->bind_param("s", $name);
         $stmt->execute();
         $result = $stmt->get_result();
+        $stmt->close();
         return $result->num_rows > 0;
     }
 }

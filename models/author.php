@@ -15,8 +15,10 @@ class Author
         $stmt->bind_param("s", $name);
 
         if ($stmt->execute()) {
+            $stmt->close();
             return true;
         } else {
+            $stmt->close();
             throw new mysqli_sql_exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
         }
     }
@@ -26,7 +28,9 @@ class Author
     {
         $stmt = $this->conn->prepare("SELECT * FROM authors");
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 
     //Tüm belirli id'ye göre yazar çekme işlemi
@@ -35,7 +39,9 @@ class Author
         $stmt = $this->conn->prepare("SELECT * FROM authors WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $result;
     }
 
     // Yazar güncelleme işlemi
@@ -43,7 +49,9 @@ class Author
     {
         $stmt = $this->conn->prepare("UPDATE authors SET name = ? WHERE id = ?");
         $stmt->bind_param("si", $name, $id);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
 
     // Yazar silme işlemi
@@ -51,6 +59,8 @@ class Author
     {
         $stmt = $this->conn->prepare("DELETE FROM authors WHERE id = ?");
         $stmt->bind_param("i", $id);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
 }

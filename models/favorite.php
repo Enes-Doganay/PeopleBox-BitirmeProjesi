@@ -13,7 +13,9 @@ class Favorite
     {
         $stmt = $this->conn->prepare("INSERT INTO favorites (user_id, book_id) VALUES (?, ?)");
         $stmt->bind_param("ii", $userId, $bookId);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
 
     //Favori kaldırma işlemi
@@ -21,7 +23,9 @@ class Favorite
     {
         $stmt = $this->conn->prepare("DELETE FROM favorites WHERE user_id = ? AND book_id = ?");
         $stmt->bind_param("ii", $userId, $bookId);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
 
     //Tüm favorileri all
@@ -30,7 +34,9 @@ class Favorite
         $stmt = $this->conn->prepare("SELECT * FROM favorites WHERE user_id = ?");
         $stmt->bind_param("i", $userId);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 
     //Favorilerde var mı
@@ -40,6 +46,7 @@ class Favorite
         $stmt->bind_param("ii", $userId, $bookId);
         $stmt->execute();
         $result = $stmt->get_result();
+        $stmt->close();
         return $result->num_rows > 0;
     }
 }

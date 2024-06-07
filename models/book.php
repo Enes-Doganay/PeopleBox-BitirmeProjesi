@@ -16,8 +16,10 @@ class Book
         $stmt = $this->conn->prepare("INSERT INTO books (name,description,isbn,image,page_count,category_id,author_id,publisher_id, is_active, is_home, price, stock) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("ssssiiiiiiii", $name, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome, $price, $stock);
         if ($stmt->execute()) {
+            $stmt->close();
             return true;
         } else {
+            $stmt->close();
             throw new mysqli_sql_exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
         }
     }
@@ -26,8 +28,10 @@ class Book
     public function update($id, $name, $description, $isbn, $image = null, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0, $price, $stock)
     {
         $stmt = $this->conn->prepare("UPDATE books SET name = ?, description = ?, isbn = ?, image = ?, page_count = ?, category_id = ?, author_id = ?, publisher_id = ? , is_active = ?, is_home = ?, price = ?, stock = ? WHERE id = ?");
-        $stmt->bind_param("ssssiiiiiiiii", $name, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome, $price, $stock ,$id);
-        return $stmt->execute();
+        $stmt->bind_param("ssssiiiiiiiii", $name, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome, $price, $stock, $id);
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
 
     // Kitap silme işlemi
@@ -35,14 +39,18 @@ class Book
     {
         $stmt = $this->conn->prepare("DELETE FROM books WHERE id = ?");
         $stmt->bind_param("i", $id);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
     }
 
     //Stok güncelleme işlemi
-    public function updateStock($id, $newStock){
+    public function updateStock($id, $newStock)
+    {
         $stmt = $this->conn->prepare("UPDATE books SET stock = ? WHERE id = ?");
-        $stmt->bind_param("ii", $newStock,$id);
+        $stmt->bind_param("ii", $newStock, $id);
         $stmt->execute();
+        $stmt->close();
     }
 
     //Tüm kitapları çekme işlemi
@@ -50,7 +58,9 @@ class Book
     {
         $stmt = $this->conn->prepare("SELECT * FROM books");
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 
     //Tüm belirli id'ye göre kitap çekme işlemi
@@ -68,7 +78,9 @@ class Book
         $stmt = $this->conn->prepare("SELECT * FROM books WHERE category_id = ?");
         $stmt->bind_param("i", $categoryId);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 
     //Aranan kitapları görüntülemek için kitapları çekme işlemi
@@ -79,7 +91,9 @@ class Book
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("sii", $searchQuery, $limit, $offset);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 
     //Oluşturulan tarihe göre azalan sırada sıralanmış ana sayfa kitaplarını sayfalamaya göre al
@@ -88,7 +102,9 @@ class Book
         $stmt = $this->conn->prepare("SELECT * FROM books WHERE is_active = 1 AND is_home = 1 ORDER BY created_at DESC LIMIT ? OFFSET ?");
         $stmt->bind_param("ii", $limit, $offset);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 
     // //Filtrelenen kitapları kategori yazar ve yayınevlerine göre al
@@ -98,7 +114,7 @@ class Book
         $params = [];
         $types = "";
 
-        if(!empty($categoryIds)){
+        if (!empty($categoryIds)) {
             $sql .= " AND category_id IN (" . implode(',', array_fill(0, count($categoryIds), '?')) . ")";
             $params = array_merge($params, $categoryIds);
             $types .= str_repeat('i', count($categoryIds));
@@ -133,7 +149,9 @@ class Book
         }
 
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 
     // Belirli bir isbnin veritabanında var olup olmadığını kontrol etme işlemi (isbn unique)
@@ -144,7 +162,7 @@ class Book
         $stmt->bind_param("s", $isbn);
         $stmt->execute();
         $result = $stmt->get_result();
+        $stmt->close();
         return $result->num_rows > 0;
     }
 }
-?>

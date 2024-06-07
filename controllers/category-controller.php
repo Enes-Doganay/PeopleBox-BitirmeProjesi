@@ -67,6 +67,10 @@ class CategoryController
     // Kategori silme işlemi
     public function delete($id)
     {
+        // Alt kategorilerin parent_id'sini null yap
+        $this->category->nullifySubCategories($id);
+        
+        // Kategoriyi sil
         $result = $this->category->delete($id);
 
         if ($result === true) {

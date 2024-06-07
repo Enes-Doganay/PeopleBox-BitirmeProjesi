@@ -4,9 +4,9 @@ require_once "controllers/user-controller.php" ;
 
 $userController = new UserController();
 
-if(!$userController->isAdmin()){
-    header('Location: index.php');
-}
+// if(!$userController->isAdmin()){
+//     header('Location: index.php');
+// }
 
 $categoryController = new CategoryController();
 //Kategori id'yi çek

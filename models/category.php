@@ -51,7 +51,9 @@ class Category
         $stmt->bind_param("i", $parentId);
         $stmt->execute();
         return $stmt->get_result();
-    }
+        }
+        
+    // Alt kategorilerin idlerini belirli bir üst kategoriye göre çekme işlemi
     public function getSubCategoryIds($parentId)
     {
         $stmt = $this->conn->prepare("SELECT id FROM categories WHERE parent_id = ?");
@@ -73,6 +75,14 @@ class Category
     {
         $stmt = $this->conn->prepare("DELETE FROM categories WHERE id = ?");
         $stmt->bind_param("i", $id);
+        return $stmt->execute();
+    }
+
+    //Kategori silerken bağlı olduğu kategoriden dolayı foreign key hatası vermesin diye parentini null olarak ata
+    public function nullifySubCategories($parentId) {
+        $query = "UPDATE categories SET parent_id = NULL WHERE parent_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $parentId);
         return $stmt->execute();
     }
 

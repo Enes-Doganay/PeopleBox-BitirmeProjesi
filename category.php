@@ -25,7 +25,7 @@ $publisherController = new PublisherController();
 $authorIds = isset($_GET["author_ids"]) ? array_map('intval', $_GET["author_ids"]) : [];
 $publisherIds = isset($_GET["publisher_ids"]) ? array_map('intval', $_GET["publisher_ids"]) : [];
 
-$limit = 3; // Sayfa başına gösterilecek ürün sayısı
+$limit = 12; // Sayfa başına gösterilecek ürün sayısı
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 

@@ -9,7 +9,7 @@ $bookController = new BookController();
 $authorController = new AuthorController();
 $publisherController = new PublisherController();
 
-$limit = 3; // Sayfa başına gösterilecek ürün sayısı
+$limit = 12; // Sayfa başına gösterilecek ürün sayısı
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 

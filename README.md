@@ -151,8 +151,8 @@ CRUD (Create, Read, Update, Delete) işlemleri. Veritabanı tasarımı ve ilişk
 ### **E-posta Bildirimleri**: 
 Kullanıcılara e-posta bildirimleri gönderme.   
 
-![image](https://github.com/Enes-Doganay/PeopleBox-BitirmeProjesi/assets/71710802/b715d3b0-d825-48e2-900d-9575019ba020)    
-![image](https://github.com/Enes-Doganay/PeopleBox-BitirmeProjesi/assets/71710802/80e4c37f-7af0-46a9-a61c-41e4dc9b0879)
+![image](https://github.com/Enes-Doganay/PeopleBox-BitirmeProjesi/assets/71710802/dc838540-c01a-49fd-ab6e-4276e72b3b4d)
+![image](https://github.com/Enes-Doganay/PeopleBox-BitirmeProjesi/assets/71710802/cfec7c5f-cb40-4c6b-aba3-7c144746c4b3)
 
 ### **Ödeme Entegrasyonu**: 
 Online ödeme sistemleri ile entegrasyon (Stripe).  

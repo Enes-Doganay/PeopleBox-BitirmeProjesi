@@ -14,8 +14,18 @@ if (isset($_GET['token'])) {
     die("Geçersiz token");
 }
 
+// CSRF token oluşturma ve kontrol etme
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 // POST isteği geldiğinde formdan token ve diğer bilgileri alıp işle
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["reset_password"])) {
+    // CSRF token kontrolü
+    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        die("Geçersiz CSRF token");
+    }
+    
     $token = $_POST["token"];
     $password = control_input($_POST["password"]);
     $confirmPassword = control_input($_POST["confirmPassword"]);
@@ -47,12 +57,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["reset_password"])) {
 }
 ?>
 
+<!-- Form -->
 <div class="container my-3">
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
                     <form action="reset-password.php?token=<?php echo htmlspecialchars($token, ENT_QUOTES, 'UTF-8'); ?>" method="POST">
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                         <input type="hidden" name="token" value="<?php echo htmlspecialchars($token, ENT_QUOTES, 'UTF-8'); ?>">
                         <div class="mb-3">
                             <label for="password" class="form-label">Yeni Şifre</label>
@@ -73,8 +85,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["reset_password"])) {
     </div>
 </div>
 
+<!-- Başarılı Kayıt Modalı -->
 <?php
-// Reset password başarılıysa modalı çağır
 if (!empty($success_message)) {
     include "views/_modal.php";
     renderSuccessModal($success_message);

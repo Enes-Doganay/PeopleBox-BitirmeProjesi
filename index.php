@@ -19,9 +19,8 @@ $noResultsFound = false;
 $totalBooks = 0;
 
 if (!empty($searchQuery)) {
-    // Arama sonuçlarını getir
-    $allSearchResults = $bookController->getSearchBooks($searchQuery, PHP_INT_MAX, 0); // Tüm sonuçları almak için limit çok büyük
-    $totalBooks = $allSearchResults->num_rows;
+    // Arama sonuçlarının toplam sayısını al
+    $totalBooks = $bookController->getTotalSearchBooks($searchQuery);
 
     // Sayfalama için gerekli arama sonuçlarını getir
     $books = $bookController->getSearchBooks($searchQuery, $limit, $offset);
@@ -29,13 +28,13 @@ if (!empty($searchQuery)) {
         $noResultsFound = true;
     }
 } else {
-    // Anasayfa kitaplarını getir
-    $allHomeBooks = $bookController->getPaginatedHomeBooks(PHP_INT_MAX, 0);
-    $totalBooks = $allHomeBooks->num_rows;
+    // Ana sayfa kitaplarının toplam sayısını al
+    $totalBooks = $bookController->getTotalHomeBooks();
 
-    // Sayfalama için gerekli anasayfa kitaplarını getir
+    // Sayfalama için gerekli ana sayfa kitaplarını getir
     $books = $bookController->getPaginatedHomeBooks($limit, $offset);
 }
+
 $totalPages = ceil($totalBooks / $limit);
 ?>
 

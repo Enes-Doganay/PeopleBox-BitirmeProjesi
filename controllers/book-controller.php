@@ -6,15 +6,17 @@ class BookController
 {
     private $book;
 
-    // Veritabanı bağlantısı ve kitap sınıfı oluşturma
-    public function __construct()
+    public function __construct($book = null)
     {
-        $database = new database();
-        $db = $database->getConnection();
-        $this->book = new Book($db);
+        if ($book === null) {
+            $database = new Database();
+            $db = $database->getConnection();
+            $this->book = new Book($db);
+        } else {
+            $this->book = $book;
+        }
     }
 
-    // Yeni kitap oluşturma işlemi
     public function create($name, $description = null, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0, $price, $stock)
     {
         if ($this->book->isBookExists($isbn)) {
@@ -30,7 +32,6 @@ class BookController
         }
     }
 
-    // Kitap güncelleme işlemi
     public function update($id, $name, $description, $isbn, $image = null, $pageCount, $categoryId, $authorId, $publisherId, $isActive = 1, $isHome = 0, $price, $stock)
     {
         $result = $this->book->update($id, $name, $description, $isbn, $image, $pageCount, $categoryId, $authorId, $publisherId, $isActive, $isHome, $price, $stock);
@@ -42,7 +43,6 @@ class BookController
         }
     }
 
-    // Kitap silme işlemi
     public function delete($id)
     {
         $result = $this->book->delete($id);
@@ -54,34 +54,34 @@ class BookController
         }
     }
 
-    //Stok güncelleme işlemi
     public function updateStock($id, $newStock)
     {
         $this->book->updateStock($id, $newStock);
     }
 
-    //Tüm kitapları çekme işlemi
     public function getAll()
     {
         return $this->book->getAll();
     }
 
-    // Belirli bir kitabı idye göre çekme işlemi
     public function getById($id)
     {
         return $this->book->getById($id);
     }
 
-    // Belirli bir kategori idye göre çekme işlemi
     public function getByCategoryId($categoryId)
     {
         return $this->book->getByCategoryId($categoryId);
     }
 
-    //Aranan kitapları görüntülemek için kitapları çekme işlemi
     public function getSearchBooks($searchQuery, $limit, $offset)
     {
         return $this->book->getSearchBooks($searchQuery, $limit, $offset);
+    }
+
+    public function getTotalSearchBooks($searchQuery)
+    {
+        return $this->book->getTotalSearchBooks($searchQuery);
     }
 
     public function getPaginatedHomeBooks($limit, $offset)
@@ -89,9 +89,14 @@ class BookController
         return $this->book->getPaginatedHomeBooks($limit, $offset);
     }
 
-    //Filtrelenen kitapları kategori yazar ve yayınevlerine göre al
+    public function getTotalHomeBooks()
+    {
+        return $this->book->getTotalHomeBooks();
+    }
+
     public function getFilteredBooksByCategories($categoryIds = [], $authorIds = [], $publisherIds = [], $limit = null, $offset = null)
     {
         return $this->book->getFilteredBooksByCategories($categoryIds, $authorIds, $publisherIds, $limit, $offset);
     }
 }
+?>

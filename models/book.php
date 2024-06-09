@@ -20,7 +20,7 @@ class Book
             return true;
         } else {
             $stmt->close();
-            throw new mysqli_sql_exception("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
+            throw new Exception("Kitap ekleme başarısız: (" . $stmt->errno . ") " . $stmt->error);
         }
     }
 
@@ -69,7 +69,9 @@ class Book
         $stmt = $this->conn->prepare("SELECT * FROM books WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $result;
     }
 
     // Belirli bir kategori idye göre çekme işlemi
@@ -86,14 +88,25 @@ class Book
     //Aranan kitapları görüntülemek için kitapları çekme işlemi
     public function getSearchBooks($searchQuery, $limit, $offset)
     {
-        $searchQuery = "%" . $this->conn->real_escape_string($searchQuery) . "%";
-        $sql = "SELECT * FROM books WHERE is_active = 1 AND name LIKE ? LIMIT ? OFFSET ?";
-        $stmt = $this->conn->prepare($sql);
+        $searchQuery = "%" . $searchQuery . "%";
+        $stmt = $this->conn->prepare("SELECT * FROM books WHERE is_active = 1 AND name LIKE ? LIMIT ? OFFSET ?");
         $stmt->bind_param("sii", $searchQuery, $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
         return $result;
+    }
+
+
+    public function getTotalSearchBooks($searchQuery)
+    {
+        $searchQuery = "%" . $searchQuery . "%";
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM books WHERE is_active = 1 AND name LIKE ?");
+        $stmt->bind_param("s", $searchQuery);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $result['total'];
     }
 
     //Oluşturulan tarihe göre azalan sırada sıralanmış ana sayfa kitaplarını sayfalamaya göre al
@@ -105,6 +118,15 @@ class Book
         $result = $stmt->get_result();
         $stmt->close();
         return $result;
+    }
+
+    public function getTotalHomeBooks()
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM books WHERE is_active = 1 AND is_home = 1");
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $result['total'];
     }
 
     // //Filtrelenen kitapları kategori yazar ve yayınevlerine göre al
@@ -157,8 +179,7 @@ class Book
     // Belirli bir isbnin veritabanında var olup olmadığını kontrol etme işlemi (isbn unique)
     public function isBookExists($isbn)
     {
-        $query = "SELECT * FROM books WHERE isbn = ?";
-        $stmt = $this->conn->prepare($query);
+        $stmt = $this->conn->prepare("SELECT * FROM books WHERE isbn = ?");
         $stmt->bind_param("s", $isbn);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -166,3 +187,4 @@ class Book
         return $result->num_rows > 0;
     }
 }
+?>

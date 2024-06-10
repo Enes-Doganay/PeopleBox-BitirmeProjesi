@@ -7,4 +7,5 @@
     <a href="edit-authors.php" class="list-group-item list-group-item-action">Yazar Düzenle</a>
     <a href="add-publisher.php" class="list-group-item list-group-item-action">Yayıncı Ekle</a>
     <a href="edit-publishers.php" class="list-group-item list-group-item-action">Yayıncı Düzenle</a>
+    <a href="order-management.php" class="list-group-item list-group-item-action">Siparişler</a>
 </div>

@@ -4,14 +4,13 @@ include "views/_navbar.php";
 require_once 'controllers/transaction-controller.php';
 require_once 'controllers/transaction-item-controller.php';
 require_once 'controllers/book-controller.php';
-require_once "controllers/user-controller.php" ;
+require_once "controllers/user-controller.php";
 
 $userController = new UserController();
 
-if(!$userController->isAdmin()){
+if (!$userController->isAdmin()) {
     header('Location: index.php');
 }
-
 
 $transactionController = new TransactionController();
 $transactionItemController = new TransactionItemController();
@@ -35,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php include "views/_admin-menu.php"; ?>
         </div>
         <div class="col-md-9 my-2">
-            <h3>İşlemler</h3>
+            <h3>Siparişler</h3>
             <form method="get" action="order-management.php" class="mb-4">
                 <div class="form-group">
                     <label for="status">Sipariş Durumuna Göre Filtrele:</label>
@@ -64,17 +63,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <tbody>
                     <?php foreach ($transactions as $transaction) : ?>
                         <?php
-                        $items = $transactionItemController->getItemsByTransactionId($transaction['id']);
-                        $productNames = [];
-                        foreach ($items as $productId) {
-                            $productNames[] = $bookController->getById($productId)['name']; // `getById` metodundan kitabı çek kitap adını al
+                        $items = $transactionItemController->getAllTransactionItems($transaction['id']);
+                        $productDetails = [];
+                        foreach ($items as $item) {
+                            $product = $bookController->getById($item['product_id']);
+                            $productDetails[] = $product['name'] . " (" . $item['quantity'] . " adet)"; // Ürün adı ve miktarını al
                         }
                         ?>
                         <tr>
                             <td><?php echo $transaction['id']; ?></td>
-
-                            <td><?php echo implode('<br>', $productNames); ?> </td> <!-- Ürün adlarını alt alta göster -->
-
+                            <td><?php echo implode('<br>', $productDetails); ?></td> <!-- Ürün adlarını ve miktarlarını alt alta göster -->
                             <td><?php echo number_format($transaction['amount'], 2, ',', '.') . ' ' . strtoupper($transaction['currency']); ?></td>
                             <td><?php echo $transaction['status']; ?></td>
                             <td><?php echo $transaction['created_at']; ?></td>

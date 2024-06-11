@@ -13,8 +13,8 @@ class TransactionItemController {
     }
 
     // Belirli bir işlemdeki ürünleri getirmek için TransactionItem modelini kullanır
-    public function getItemsByTransactionId($transactionId) {
-        return $this->transactionItem->getItemsByTransactionId($transactionId);
+    public function getAllTransactionItems($transactionId) {
+        return $this->transactionItem->getAllTransactionItems($transactionId);
     }
 }
 ?>

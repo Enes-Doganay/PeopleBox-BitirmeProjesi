@@ -120,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
                             <input type="password" class="form-control" name="confirmPassword" id="confirmPassword">
                             <?php if (!empty($confirmPassword_err)) echo "<div class='text-danger'>{$confirmPassword_err}</div>"; ?>
                         </div>
-                        <input type="submit" name="register" value="Submit" class="btn btn-primary">
+                        <input type="submit" name="register" value="Kayıt Ol" class="btn btn-primary">
                     </form>
                 </div>
             </div>

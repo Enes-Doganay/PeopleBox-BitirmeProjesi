@@ -45,6 +45,20 @@ class Transaction{
         return $transactions;
     }
 
+    //Kullanıcının tüm işlemlerini çek
+    public function getTransactionsByUserId($userId) {
+        $stmt = $this->conn->prepare("SELECT * FROM transactions WHERE user_id = ? ORDER BY created_at DESC");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $transactions = [];
+        while ($row = $result->fetch_assoc()) {
+            $transactions[] = $row;
+        }
+        $stmt->close();
+        return $transactions;
+    }
+
     // Belirli bir işlemin sipariş durumunu günceller
     public function updateOrderStatus($transactionId, $status) {
         $stmt = $this->conn->prepare("UPDATE transactions SET order_status = ? WHERE id = ?");

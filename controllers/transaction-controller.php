@@ -20,10 +20,16 @@ class TransactionController
         $this->transaction->saveTransaction($userId, $charge, $items);
     }
 
-    // İşlemleri listelemek için Transaction modelini kullanı
+    // İşlemleri listelemek için Transaction modelini kullanır
     public function listTransactions($status = null)
     {
         return $this->transaction->getTransactions($status);
+    }
+
+    //Kullanıcının tüm işlemlerini çekmek için Transaction modelini kullanır.
+    public function getTransactionsByUserId($userId)
+    {
+        return $this->transaction->getTransactionsByUserId($userId);   
     }
 
     // Sipariş durumunu güncellemek için Transaction modelini kullanır

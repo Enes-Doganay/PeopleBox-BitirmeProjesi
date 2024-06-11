@@ -127,4 +127,28 @@ class user
         $stmt->close();
         return $result;
     }
+
+    public function updateUser($id, $firstname, $lastname, $email, $password = null) {
+        if ($password) {
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+            $stmt = $this->conn->prepare("UPDATE users SET firstname = ?, lastname = ?, email = ?, password = ? WHERE id = ?");
+            $stmt->bind_param("ssssi", $firstname, $lastname, $email, $hashedPassword, $id);
+        } else {
+            $stmt = $this->conn->prepare("UPDATE users SET firstname = ?, lastname = ?, email = ? WHERE id = ?");
+            $stmt->bind_param("sssi", $firstname, $lastname, $email, $id);
+        }
+        $result = $stmt->execute();
+        $stmt->close();
+        return $result;
+    }
+
+    public function checkPassword($id, $password)
+    {
+        $stmt = $this->conn->prepare("SELECT password FROM users WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return password_verify($password, $result['password']);
+    }
 }

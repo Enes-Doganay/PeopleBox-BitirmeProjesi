@@ -102,5 +102,23 @@ class UserController {
         }
     }
     
+    public function updateUser($id, $firstname, $lastname, $email, $currentPassword = null, $newPassword = null, $confirmPassword = null) {
+        if ($newPassword !== null && $confirmPassword !== null) {
+            if ($newPassword !== $confirmPassword) {
+                return "Yeni şifreler uyuşmuyor.";
+            }
+
+            if (!$this->user->checkPassword($id, $currentPassword)) {
+                return "Mevcut şifre yanlış.";
+            }
+        }
+        $result = $this->user->updateUser($id, $firstname, $lastname, $email, $newPassword);
+        
+        if ($result === true) {
+            return "Güncelleme başarılı";
+        } else {
+            return "Güncelleme başarısız: " . $result;
+        }
+    }
 }
 ?>

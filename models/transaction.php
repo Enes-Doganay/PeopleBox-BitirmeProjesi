@@ -10,9 +10,11 @@ class Transaction{
 
     // Yeni bir işlemi ve ilgili öğeleri veritabanına kaydeder
     public function saveTransaction($userId,$charge,$items){
+        // Miktarı kuruş cinsinden TL cinsine dönüştür
+        $amountInTL = $charge->amount / 100;
         // transactions tablosuna yeni bir kayıt ekle
         $stmt = $this->conn->prepare("INSERT INTO transactions (user_id,transaction_id,amount,currency,description,status) VALUES (?,?,?,?,?,?)");
-        $stmt->bind_param("isisss", $userId,$charge->id,$charge->amount,$charge->currency,$charge->description,$charge->status);
+        $stmt->bind_param("isisss", $userId,$charge->id,$amountInTL,$charge->currency,$charge->description,$charge->status);
         $stmt->execute();
 
         // Son eklenen işlemin ID'sini al

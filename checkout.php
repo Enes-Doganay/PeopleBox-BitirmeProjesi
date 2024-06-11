@@ -40,7 +40,7 @@ if ($insufficientStock) {
                 <div id="card-errors" role="alert"></div>
             </div>
             <!-- Toplam tutarı saklamak için gizli bir input alanı -->
-            <input type="hidden" name="totalAmount" value="<?php echo $totalPrice * 100; ?>"> <!-- Total amount in cents -->
+            <input type="hidden" name="totalAmount" value="<?php echo $totalPrice * 100; ?>"> <!-- Toplam miktar kuruş cinsinden-->
             <button class="btn btn-primary">Ödeme Yap</button>
         </form>
     </div>

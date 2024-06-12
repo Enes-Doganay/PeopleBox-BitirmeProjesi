@@ -2,7 +2,11 @@
 
 **Geliştirici:** Enes Doğanay
 
-**Tarih:** 07.06.2024
+**Tarih:** 07.06.2024  
+
+
+https://github.com/Enes-Doganay/PeopleBox-BitirmeProjesi/assets/71710802/2bca867f-2768-46d9-a38a-a8dd211e8fef
+
 
 ## 1. Giriş
 
@@ -189,11 +193,16 @@ Online ödeme sistemleri ile entegrasyon (Stripe).
 - Php sunucusu olan XAMPP, WAMP veya benzeri bir local sunucu kullanabilirsiniz.
 6. Proje dosyalarını sunucu klasörüne taşıyın:
 - XAMPP için htdocs klasörüne taşıyın.
-7. Web tarayıcınızı kullanarak proje dizinine erişin ve uygulamayı çalıştırın.
+7. Web tarayıcınızı kullanarak proje dizinine erişin ve uygulamayı çalıştırın.  
 
-## **6. Test Senaryoları**
+## **6. Veritabanı İlişkileri**
 
-### **6.1 Kullanıcı Kayıt Testi**
+![image](https://github.com/Enes-Doganay/PeopleBox-BitirmeProjesi/assets/71710802/d5860ad0-8fae-4776-b21c-751f544fb483)
+
+
+## **7. Test Senaryoları**
+
+### **7.1 Kullanıcı Kayıt Testi**
 
 Senaryo: Yeni bir kullanıcı sisteme kayıt olur.
 - **Giriş**: Kullanıcı, kayıt formunu doğru bilgilerle doldurur.
@@ -202,7 +211,7 @@ Senaryo: Yeni bir kullanıcı sisteme kayıt olur.
   2. Kayıt butonuna tıklanır.
 - **Çıkış**: Kullanıcı başarıyla kayıt olur. Kayıt başarılı modalı gösterilir ve giriş yapma ekranına yönlendirilir.
 
-### **6.2 Kullanıcı Giriş Testi**
+### **7.2 Kullanıcı Giriş Testi**
 
 Senaryo: Kayıtlı bir kullanıcı sisteme giriş yapar.
 - **Giriş**: Kullanıcı, giriş formunu doğru bilgilerle doldurur.
@@ -211,7 +220,7 @@ Senaryo: Kayıtlı bir kullanıcı sisteme giriş yapar.
   2. Giriş butonuna tıklanır.
 - **Çıkış**: Kullanıcı başarıyla giriş yapar ve ana sayfaya yönlendirilir.
 
-### **6.3 Kitap Ekleme Testi**
+### **7.3 Kitap Ekleme Testi**
 
 Senaryo: Yönetici yeni bir kitap ekler.
 - **Giriş**: Yönetici, kitap ekleme formunu doldurur.
@@ -220,7 +229,7 @@ Senaryo: Yönetici yeni bir kitap ekler.
   2. Kaydet butonuna tıklanır.
 - **Çıkış**: Kitap başarıyla eklenir ve kitap ekleme başarılı mesajı çıkar.
 
-### **6.4 Alışveriş Sepeti Testi**
+### **7.4 Alışveriş Sepeti Testi**
 
 Senaryo: Kullanıcı bir kitabı alışveriş sepetine ekler.
 - **Giriş**: Kullanıcı, kitap detay sayfasına gider.
@@ -228,7 +237,7 @@ Senaryo: Kullanıcı bir kitabı alışveriş sepetine ekler.
   1. "Sepete Ekle" butonuna tıklanır.
 - **Çıkış**: Kitap başarıyla sepete eklenir ve kullanıcı sepetini görüntüler.
 
-### **6.5 Ödeme Testi**
+### **7.5 Ödeme Testi**
 
 Senaryo: Kullanıcı sepetindeki kitapları satın alır.
 - **Giriş**: Kullanıcı, ödeme sayfasına gider.

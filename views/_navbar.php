@@ -51,7 +51,12 @@ session_start();
                     <a class="nav-link" href="favorite-list.php">Favorilerim</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="cart.php">Sepetim
+                    <?php 
+                        require_once "controllers/cart-controller.php";
+                        $cartController = new CartController();
+                        $items = $cartController->getCartItems();
+                    ?>
+                    <a class="nav-link" href="cart.php">Sepetim (<?php echo count($items); ?>)
                         <i class="fa-solid fa-cart-shopping"></i>
                     </a>
                 </li>

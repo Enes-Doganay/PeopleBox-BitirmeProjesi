@@ -24,6 +24,14 @@ $user = $userController->getById($userId);
 // TransactionController sınıfını başlat ve kullanıcının işlemlerini getir
 $transactionController = new TransactionController();
 $transactions = $transactionController->getTransactionsByUserId($userId);
+
+$status_translation = array(
+    "pending" => "Beklemede",
+    "processing" => "Hazırlanıyor",
+    "shipped" => "Gönderildi",
+    "delivered" => "Teslim edildi",
+    "canceled" => "İptal edildi"
+);
 ?>
 
 <div class="container my-3">
@@ -40,14 +48,16 @@ $transactions = $transactionController->getTransactionsByUserId($userId);
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
-                                <div class="col-md-4 text-center"><b>Sipariş Tarihi</b></div>
-                                <div class="col-md-4 text-center"><b>Alıcı</b></div>
-                                <div class="col-md-4 text-center"><b>Tutar</b></div>
+                                <div class="col-md-3 text-center"><b>Sipariş Tarihi</b></div>
+                                <div class="col-md-3 text-center"><b>Alıcı</b></div>
+                                <div class="col-md-3 text-center"><b>Tutar</b></div>
+                                <div class="col-md-3 text-center"><b>Sipariş Durumu</b></div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4 text-center"><?php echo $transaction['created_at']; ?></div>
-                                <div class="col-md-4 text-center"><?php echo $user['firstName'] . ' ' . $user['lastName']; ?></div>
-                                <div class="col-md-4 text-center"><?php echo $transaction['amount']; ?> TL</div>
+                                <div class="col-md-3 text-center"><?php echo $transaction['created_at']; ?></div>
+                                <div class="col-md-3 text-center"><?php echo $user['firstName'] . ' ' . $user['lastName']; ?></div>
+                                <div class="col-md-3 text-center"><?php echo $transaction['amount']; ?> TL</div>
+                                <div class="col-md-3 text-center"><?php echo $status_translation[$transaction['order_status']]; ?></div>
                             </div>
                         </div>
 
